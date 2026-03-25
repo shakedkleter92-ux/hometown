@@ -1,4 +1,8 @@
-const OVERPASS_URL = "https://overpass-api.de/api/interpreter";
+const OVERPASS_URLS = [
+  "https://overpass-api.de/api/interpreter",
+  "https://overpass.kumi.systems/api/interpreter",
+  "https://overpass.nchc.org.tw/api/interpreter",
+];
 
 const btnPanel = document.getElementById("btnPanel");
 const panelEl = document.getElementById("panel");
@@ -37,18 +41,33 @@ const palCoral = document.getElementById("palCoral");
 const palSage = document.getElementById("palSage");
 const palHeatwave = document.getElementById("palHeatwave");
 
-function overpassQuery(query) {
-  return fetch(OVERPASS_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
-    body: "data=" + encodeURIComponent(query),
-  }).then(async (res) => {
-    if (!res.ok) {
-      const text = await res.text().catch(() => "");
-      throw new Error(`Overpass failed (${res.status}): ${text.slice(0, 200)}`);
+async function overpassQuery(query) {
+  const body = "data=" + encodeURIComponent(query);
+
+  let lastErr = null;
+  for (const url of OVERPASS_URLS) {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 60_000);
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
+        body,
+        signal: ctrl.signal,
+      });
+      clearTimeout(t);
+      if (!res.ok) {
+        const text = await res.text().catch(() => "");
+        throw new Error(`Overpass failed (${res.status}): ${text.slice(0, 200)}`);
+      }
+      return await res.json();
+    } catch (e) {
+      clearTimeout(t);
+      lastErr = e;
+      // try next endpoint
     }
-    return res.json();
-  });
+  }
+  throw lastErr ?? new Error("Overpass failed");
 }
 
 function extractLatLngsFromOverpassElement(el) {
@@ -110,6 +129,9 @@ const map = L.map("map", {
 // No raster basemap: only our vector layers should be visible (so toggles truly hide things).
 
 // (Glyph canvas renderer removed — back to vector layers only)
+
+// Single shared canvas renderer for ALL vectors (much faster than default SVG for many features)
+const vectorRenderer = L.canvas({ padding: 0.5 });
 
 // We'll keep a dedicated layer group for the city boundary.
 // Data layers (separated like the reference site)
@@ -1302,14 +1324,14 @@ function addOverpassGeometriesToLayer(elements, layer, kind) {
       firstRing[0][1] === firstRing[firstRing.length - 1][1];
 
     if (kind === "polygon" || (kind === "auto" && isClosed)) {
-      const poly = L.polygon(rings, { interactive: false });
+      const poly = L.polygon(rings, { interactive: false, renderer: vectorRenderer, smoothFactor: 1 });
       poly.__tags = el.tags ?? null;
       storeOriginalIfMissing(poly);
       // default to non-interactive unless caller uses typed batched loader
       addToIndex(poly, "other");
       layer.addLayer(poly);
     } else {
-      const line = L.polyline(firstRing, { interactive: false });
+      const line = L.polyline(firstRing, { interactive: false, renderer: vectorRenderer, smoothFactor: 1 });
       line.__tags = el.tags ?? null;
       storeOriginalIfMissing(line);
       addToIndex(line, "other");
@@ -1341,14 +1363,14 @@ function addOverpassGeometriesToLayerBatched(
         firstRing[0][1] === firstRing[firstRing.length - 1][1];
 
       if (kind === "polygon" || (kind === "auto" && isClosed)) {
-        const poly = L.polygon(rings, { interactive: false });
+        const poly = L.polygon(rings, { interactive: false, renderer: vectorRenderer, smoothFactor: 1 });
         poly.__tags = el.tags ?? null;
         storeOriginalIfMissing(poly);
         addToIndex(poly, type);
         styleNewLayer(poly, type);
         layer.addLayer(poly);
       } else {
-        const line = L.polyline(firstRing, { interactive: false });
+        const line = L.polyline(firstRing, { interactive: false, renderer: vectorRenderer, smoothFactor: 1 });
         line.__tags = el.tags ?? null;
         storeOriginalIfMissing(line);
         addToIndex(line, type);
