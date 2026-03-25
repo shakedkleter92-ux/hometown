@@ -289,12 +289,14 @@ html, body {
   height: 20px;
   object-fit: contain;
   display: block;
-  filter: grayscale(1) contrast(1.2) brightness(0.05);
+  /* Keep original icon visible (no heavy darkening) */
+  filter: grayscale(1);
 }
 .actionBtn:hover .icoImg,
 .iconBtn:hover .icoImg,
 .actionBtn--active .icoImg {
-  filter: grayscale(1) contrast(1.2) brightness(0.05) invert(1);
+  /* On black hover/active background, flip icon to white */
+  filter: grayscale(1) invert(1);
 }
 
 .radiusCtl {
