@@ -283,7 +283,27 @@ html, body {
 .ico--sm { width: 18px; height: 18px; }
 .ico--xs { width: 14px; height: 14px; }
 
+/* Image icons (provided by user) */
+.icoImg {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  display: block;
+  filter: grayscale(1) contrast(1.2) brightness(0.05);
+}
+.actionBtn:hover .icoImg,
+.iconBtn:hover .icoImg,
+.actionBtn--active .icoImg {
+  filter: grayscale(1) contrast(1.2) brightness(0.05) invert(1);
+}
+
 .radiusCtl {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+}
+
+.randomCtl {
   display: grid;
   grid-template-columns: 1fr;
   align-items: center;

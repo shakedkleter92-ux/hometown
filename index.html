@@ -52,14 +52,7 @@
           <div class="panel__section">
             <div class="panel__actions" aria-label="פעולות">
               <button class="actionBtn" id="btnResetLayout" type="button" aria-label="איפוס" title="איפוס">
-                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M7 7h5V2M7 7a8 8 0 1 1-2.3 5.7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </button>
-              <button class="actionBtn" id="btnRandomize" type="button" aria-label="אקראי" title="Randomize">
-                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M4 7h4l2 3 3-6h7m0 0 0 0M20 4v4M4 17h4l2-3 3 6h7M20 20v-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
+                <img class="icoImg" src="./assets/icons/back-to-start.jpg" alt="" aria-hidden="true" />
               </button>
               <button class="actionBtn actionBtn--active" id="btnToolPan" type="button" aria-label="כלי הזזת מפה" title="Pan">
                 <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
@@ -68,23 +61,18 @@
               </button>
             </div>
 
-            <div class="panel__actions panel__actions--row2" aria-label="עוצמת אקראיות">
-              <div class="slider slider--wide">
-                <div class="slider__label" aria-hidden="true">
-                  <svg class="ico ico--xs" viewBox="0 0 24 24">
-                    <path d="M7 12h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    <path d="M9 8h6M9 16h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
-                  </svg>
-                </div>
-                <input id="rngRandomize" type="range" min="0" max="100" step="1" value="35" aria-label="עוצמת אקראיות" />
+            <div class="panel__actions panel__actions--row2" aria-label="אקראיות">
+              <button class="actionBtn" id="btnRandomize" type="button" aria-label="אקראי" title="Randomize">
+                <img class="icoImg" src="./assets/icons/random.jpg" alt="" aria-hidden="true" />
+              </button>
+              <div class="randomCtl" aria-label="עוצמת אקראיות">
+                <input id="rngRandomize" class="rngMini" type="range" min="0" max="100" step="1" value="35" aria-label="עוצמת אקראיות" />
               </div>
             </div>
 
             <div class="panel__actions panel__actions--row2" aria-label="כלי הזזה">
               <button class="actionBtn" id="btnToolMove" type="button" aria-label="כלי הזזת אלמנטים" title="Move">
-                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M9 11V7a1.5 1.5 0 0 1 3 0v4M12 11V6a1.5 1.5 0 0 1 3 0v5M15 11V8.2a1.5 1.5 0 0 1 3 0V14c0 4-3 7-7 7-2.7 0-4.6-1.2-5.8-3l-2.2-3.2a1.6 1.6 0 1 1 2.6-1.9L9 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
+                <img class="icoImg" src="./assets/icons/hand.webp" alt="" aria-hidden="true" />
               </button>
               <div class="radiusCtl" aria-label="רדיוס תפיסה">
                 <input id="rngPickRadius" class="rngMini" type="range" min="10" max="260" step="1" value="40" aria-label="גודל רדיוס תפיסה" />
